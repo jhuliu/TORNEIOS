@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎾 Circuito Kidstour 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html{font-size:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1A6B30;--green-dark:#0C3318;--green-mid:#155226;--green-light:#E6F4EA;
+  --gold:#D4A842;--gold-dark:#A07820;--gold-light:#FDF5DC;
+  --red:#C0392B;--red-light:#FEF0EE;
+  --radius:12px;--border:#E2E8E2;
+  --shadow:0 2px 8px rgba(0,0,0,.08);
+  --shadow-lg:0 4px 20px rgba(0,0,0,.12)
+}
+body{font-family:'Inter',system-ui,sans-serif;background:#EFF3EF;color:#1a1a1a;-webkit-font-smoothing:antialiased}
+.app{min-height:100vh;display:flex;flex-direction:column}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--green-dark);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.fpt-badge{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#E8C060);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--green-dark);flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.topbar-title{color:#fff;font-size:13px;font-weight:500;font-family:'Oswald',sans-serif;letter-spacing:.5px}
+.topbar-right{display:flex;align-items:center;gap:6px}
+.mode-btn{padding:7px 14px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:none;transition:all .18s;letter-spacing:.3px}
+.btn-view{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85)}
+.btn-edit{background:var(--gold);color:var(--green-dark)}
+.btn-view.active{background:rgba(255,255,255,.25);color:#fff}
+.btn-edit.active{background:#E8C040;box-shadow:0 2px 8px rgba(212,168,66,.4)}
+
+/* ── LOCK ── */
+.lock-screen{background:linear-gradient(160deg,var(--green-dark) 0%,var(--green-mid) 100%);display:flex;align-items:center;justify-content:center;padding:60px 20px;min-height:100vh}
+.lock-card{background:#fff;border-radius:20px;padding:36px 28px;width:100%;max-width:340px;text-align:center;box-shadow:var(--shadow-lg)}
+.lock-icon{width:56px;height:56px;border-radius:50%;background:var(--green-light);margin:0 auto 18px;display:flex;align-items:center;justify-content:center}
+.lock-icon svg{width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:2}
+.lock-card h2{font-size:17px;font-weight:600;margin-bottom:4px;font-family:'Oswald',sans-serif;letter-spacing:.3px}
+.lock-card p{font-size:13px;color:#999;margin-bottom:22px}
+.lock-card input{width:100%;padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:18px;text-align:center;letter-spacing:6px;margin-bottom:14px;outline:none;transition:border-color .15s}
+.lock-card input:focus{border-color:var(--green)}
+.lock-card button{width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Oswald',sans-serif;letter-spacing:.5px}
+.lock-error{color:var(--red);font-size:12px;margin-top:8px;display:none}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(160deg,var(--green-dark) 0%,var(--green-mid) 60%,#1E7535 100%);padding:24px 16px 20px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'🎾';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:110px;opacity:.06;pointer-events:none}
+.hero-tag{display:inline-block;background:rgba(212,168,66,.2);border:1px solid rgba(212,168,66,.5);color:var(--gold);font-size:10px;font-weight:600;padding:3px 12px;border-radius:20px;letter-spacing:1px;margin-bottom:10px;font-family:'Oswald',sans-serif}
+.hero h1{color:#fff;font-size:20px;font-weight:700;line-height:1.25;margin-bottom:4px;font-family:'Oswald',sans-serif;letter-spacing:.3px}
+.hero-sub{color:rgba(255,255,255,.5);font-size:12px;margin-bottom:16px}
+.hero-stats{display:flex;justify-content:center;background:rgba(255,255,255,.08);border-radius:12px;overflow:hidden;max-width:380px;margin:0 auto;border:1px solid rgba(255,255,255,.1)}
+.hstat{flex:1;padding:10px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
+.hstat:last-child{border-right:none}
+.hstat-num{color:var(--gold);font-size:22px;font-weight:700;font-family:'Oswald',sans-serif}
+.hstat-label{color:rgba(255,255,255,.4);font-size:9px;letter-spacing:.6px;margin-top:2px;text-transform:uppercase}
+
+/* ── TABS ── */
+.day-tabs{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--border);padding:0 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.day-tabs::-webkit-scrollbar{display:none}
+.day-tab{flex-shrink:0;padding:13px 14px;font-size:11px;font-weight:600;color:#999;border-bottom:2.5px solid transparent;cursor:pointer;white-space:nowrap;transition:all .14s;letter-spacing:.2px;text-transform:uppercase;font-family:'Oswald',sans-serif}
+.day-tab:hover{color:var(--green)}
+.day-tab.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* ── CONTENT ── */
+.content{flex:1;padding:14px 12px 36px;max-width:820px;margin:0 auto;width:100%}
+.day-content{display:none}
+.day-content.active{display:block}
+
+.edit-hint{background:var(--gold-light);border:1px solid rgba(212,168,66,.35);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#8B6914;display:flex;align-items:center;gap:8px}
+
+.sync-bar{font-size:12px;padding:9px 14px;margin-bottom:12px;border-radius:10px;display:none;align-items:center;gap:8px}
+.sync-ok{background:#E6F4EA;color:#1E7535;border:1px solid #B7DFC0}
+.sync-err{background:#FEF0EE;color:#C0392B;border:1px solid #FACAC5}
+.sync-loading{background:#EBF4FF;color:#1A5FAB;border:1px solid #BAD5F7}
+
+/* ── TOUR HEADER ── */
+.tour-header{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;box-shadow:var(--shadow)}
+.tour-header-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.tour-icon{width:40px;height:40px;border-radius:10px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.tour-name{font-size:14px;font-weight:700;color:var(--green-dark);font-family:'Oswald',sans-serif;letter-spacing:.2px}
+.tour-meta{font-size:11px;color:#aaa;margin-top:2px}
+.tour-pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{padding:4px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.pill-green{background:var(--green-light);color:var(--green)}
+.pill-gold{background:var(--gold-light);color:var(--gold-dark)}
+.tour-edit-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11px;color:#888;cursor:pointer;white-space:nowrap;transition:all .12s;display:flex;align-items:center;gap:4px}
+.tour-edit-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-light)}
+
+/* ── TIME BLOCK ── */
+.time-block{margin-bottom:20px}
+.time-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.time-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.time-txt{font-size:12px;font-weight:700;color:#666;letter-spacing:.8px;font-family:'Oswald',sans-serif}
+.time-line{flex:1;height:1px;background:linear-gradient(to right,#ddd,transparent)}
+
+/* ── MATCH CARD ── */
+.match{
+  background:#fff;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  padding:12px 12px;
+  margin-bottom:8px;
+  display:grid;
+  grid-template-columns:62px 1fr 28px 1fr 94px 30px;
+  align-items:center;
+  gap:6px;
+  box-shadow:var(--shadow);
+  transition:border-color .15s,box-shadow .15s
+}
+.match:hover{border-color:#C8D9C8;box-shadow:0 3px 10px rgba(0,0,0,.1)}
+.match.final-match{border-color:var(--gold);background:linear-gradient(to right,#FFFDF0,#fff);box-shadow:0 2px 10px rgba(212,168,66,.2)}
+
+.meta{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.rbadge{padding:2px 6px;border-radius:5px;font-size:8.5px;font-weight:700;text-align:center;white-space:nowrap;line-height:1.6;letter-spacing:.3px;font-family:'Oswald',sans-serif}
+.cbadge{padding:2px 5px;border-radius:4px;font-size:8.5px;font-weight:700;text-align:center;line-height:1.6;font-family:'Oswald',sans-serif}
+.edit-pencil{background:none;border:none;cursor:pointer;font-size:13px;padding:2px 3px;color:#d0d0d0;line-height:1;border-radius:4px;transition:all .12s}
+.edit-pencil:hover{color:var(--green);background:#E6F4EA}
+
+/* ── PLAYERS aligned on same row ── */
+.player-col{display:flex;align-items:center;gap:4px;min-width:0}
+.pleft{justify-content:flex-end}
+.pright{justify-content:flex-start}
+.pname{font-size:12.5px;font-weight:600;color:#1a1a1a;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pnum{font-size:9px;color:#ccc;flex-shrink:0;font-family:'Oswald',sans-serif}
+
+.vs{display:flex;align-items:center;justify-content:center}
+.vs-circle{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#f0f0f0,#e8e8e8);border:1px solid #ddd;display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:700;color:#aaa;flex-shrink:0;font-family:'Oswald',sans-serif}
+
+.score-area{text-align:center}
+.score-display{font-size:11.5px;font-weight:700;color:var(--red);background:var(--red-light);border:1px solid #F5C6C2;padding:4px 7px;border-radius:8px;display:inline-block;cursor:pointer;white-space:nowrap;font-family:'Oswald',sans-serif}
+.score-display:hover{border-color:var(--red);box-shadow:0 1px 4px rgba(192,57,43,.2)}
+.score-pending{font-size:10.5px;color:#d0d0d0;font-style:italic;cursor:pointer;padding:4px 7px;border:1px dashed #ddd;border-radius:8px;display:inline-block;white-space:nowrap}
+.score-pending:hover{border-color:#aaa;color:#aaa}
+.score-input-wrap{display:flex;gap:4px;align-items:center;justify-content:center}
+.score-input{width:80px;padding:4px 6px;border:1.5px solid var(--green);border-radius:7px;font-size:12px;text-align:center;outline:none}
+.score-save{padding:5px 8px;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600}
+.score-cancel{padding:5px 6px;background:#f0f0f0;color:#666;border:none;border-radius:6px;font-size:11px;cursor:pointer}
+
+.del-btn{width:28px;height:28px;border:none;background:transparent;color:#ddd;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0}
+.del-btn:hover{background:#FEF0EE;color:var(--red)}
+
+/* ── INLINE EDIT ── */
+.inline-edit-row{background:#F3FBF5;border:1.5px solid var(--green);border-radius:var(--radius);padding:14px;margin-bottom:8px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inline-edit-row .full{grid-column:1/-1}
+.inline-edit-row label{font-size:11px;color:#666;display:block;margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.inline-edit-row input,.inline-edit-row select{width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:7px;font-size:13px;outline:none;background:#fff}
+.inline-edit-row input:focus,.inline-edit-row select:focus{border-color:var(--green)}
+.inline-actions{grid-column:1/-1;display:flex;gap:8px;margin-top:2px}
+.btn-save-inline{flex:1;padding:9px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-cancel-inline{padding:9px 16px;background:#f0f0f0;color:#666;border:none;border-radius:8px;font-size:13px;cursor:pointer}
+
+/* ── MODALS ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;padding:0;z-index:200}
+@media(min-width:520px){.modal-overlay{align-items:center;padding:20px}}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:28px 20px 32px;width:100%;max-width:420px;max-height:92vh;overflow-y:auto}
+@media(min-width:520px){.modal{border-radius:16px;padding:26px 22px}}
+.modal-handle{width:40px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 20px}
+@media(min-width:520px){.modal-handle{display:none}}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:16px;font-family:'Oswald',sans-serif;letter-spacing:.3px}
+.modal label{font-size:11px;color:#888;display:block;margin-bottom:4px;margin-top:14px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.modal input,.modal select{width:100%;padding:10px 12px;border:1.5px solid #e0e0e0;border-radius:9px;font-size:13px;outline:none;transition:border-color .15s}
+.modal input:focus,.modal select:focus{border-color:var(--green)}
+.modal-footer{display:flex;gap:8px;margin-top:20px}
+.modal-footer button{flex:1;padding:11px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Oswald',sans-serif;letter-spacing:.3px}
+.btn-cancel{background:#f0f0f0;color:#777}
+.btn-confirm{background:var(--green);color:#fff}
+.btn-delete-confirm{background:var(--red);color:#fff}
+
+.add-match-btn{width:100%;padding:11px;border:1.5px dashed #ccc;border-radius:var(--radius);background:transparent;color:#bbb;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;transition:all .14s;letter-spacing:.3px}
+.add-match-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-light)}
+
+/* ── SHARE BAR ── */
+.view-public-bar{background:#fff;border-top:1px solid var(--border);padding:16px;text-align:center}
+.view-public-bar p{font-size:12px;color:#aaa;margin-bottom:8px}
+.share-link{background:#F5F7F5;border:1px solid #ddd;border-radius:9px;padding:8px 12px;font-size:11px;color:#666;font-family:monospace;margin-bottom:10px;word-break:break-all}
+.copy-btn{padding:9px 22px;background:var(--green);color:#fff;border:none;border-radius:9px;font-size:12px;cursor:pointer;font-weight:600;font-family:'Oswald',sans-serif;letter-spacing:.4px}
+
+.empty-day{text-align:center;padding:48px 20px;color:#ccc;font-size:13px}
+.empty-day::before{content:'🎾';display:block;font-size:40px;margin-bottom:12px;opacity:.4}
+
+/* ── MOBILE ── */
+@media(max-width:560px){
+  .match{
+    grid-template-columns:56px 1fr 24px 1fr;
+    grid-template-rows:auto auto;
+    padding:10px 10px;
+    gap:5px
+  }
+  .score-area{grid-column:1/3;justify-self:center;margin-top:6px}
+  .del-btn{grid-column:3/5;justify-self:end;align-self:end}
+  .pname{font-size:12px}
+  .hero h1{font-size:18px}
+  .topbar-title{font-size:12px}
+}
+.day-tab-add{color:var(--gold)!important;border-bottom-color:transparent!important;font-style:normal}
+.day-tab-add:hover{color:var(--gold-dark)!important;background:var(--gold-light)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="fpt-badge">FPT</div>
+    <span class="topbar-title">Circuito Kidstour 2026</span>
+  </div>
+  <div class="topbar-right">
+    <button class="mode-btn btn-view active" id="btnView" onclick="setMode('view')">Jogadores</button>
+    <button class="mode-btn btn-edit" id="btnEdit" onclick="setMode('edit')">Árbitro</button>
+  </div>
+</div>
+
+<div id="lockScreen" style="display:none">
+  <div class="lock-screen">
+    <div class="lock-card">
+      <div class="lock-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2>Área do árbitro</h2>
+      <p>Digite a senha para editar resultados</p>
+      <input type="password" id="pwInput" placeholder="••••" maxlength="6" onkeydown="if(event.key==='Enter')checkPw()">
+      <button onclick="checkPw()">Entrar</button>
+      <div class="lock-error" id="lockError">Senha incorreta. Tente novamente.</div>
+    </div>
+  </div>
+</div>
+
+<div id="mainContent">
+  <div class="hero" id="heroSection">
+    <div class="hero-tag" id="heroTag">CIRCUITO OFICIAL FPT</div>
+    <h1 id="heroTitle">RR Tênis · Kidstour 2026</h1>
+    <p class="hero-sub" id="heroSub">17 a 19 de Abril · Academia RR Tênis, São Paulo</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num" id="statGames">—</div><div class="hstat-label">JOGOS</div></div>
+      <div class="hstat"><div class="hstat-num" id="statDone">—</div><div class="hstat-label">CONCLUÍDOS</div></div>
+      <div class="hstat"><div class="hstat-num" id="statCats">—</div><div class="hstat-label">CATEGORIAS</div></div>
+      <div class="hstat"><div class="hstat-num" id="statDays">—</div><div class="hstat-label">DIAS</div></div>
+    </div>
+    <button id="heroEditBtn" onclick="openHeroModal()" style="display:none;margin-top:12px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 16px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;font-family:Oswald,sans-serif;letter-spacing:.5px">✏️ EDITAR CABEÇALHO</button>
+  </div>
+
+  <div class="day-tabs" id="dayTabsContainer"></div>
+
+  <div class="content">
+    <div id="editHint" style="display:none">
+      <div class="edit-hint">✏️ &nbsp;Modo árbitro — <strong>lápis</strong> para editar jogadores/horário, <strong>placar</strong> para registrar resultado, <strong>✕</strong> para excluir.</div>
+    </div>
+    <div id="syncStatus" class="sync-bar"></div>
+    <div id="dayContents"></div>
+  </div>
+
+  <div class="view-public-bar" id="publicBar">
+    <p>Link para compartilhar com os jogadores:</p>
+    <div class="share-link" id="shareUrl"></div>
+    <button class="copy-btn" onclick="copyLink()">Copiar link</button>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div id="addModal" style="display:none">
+  <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <h3>➕ Adicionar jogo</h3>
+      <label>Jogador A</label><input type="text" id="inp_p1" placeholder="Nome do jogador A">
+      <label>Jogador B</label><input type="text" id="inp_p2" placeholder="Nome do jogador B">
+      <label>Horário</label><input type="time" id="inp_time" value="14:00">
+      <label>Quadra (opcional)</label><input type="text" id="inp_court" placeholder="ex: 3">
+      <label>Categoria</label>
+      <select id="inp_cat">
+        <option>10M</option><option>11M</option><option>8M</option><option>10F</option>
+        <option>11F</option><option>12M</option><option>12F</option><option>14M</option>
+        <option>14F</option><option>16M</option>
+      </select>
+      <label>Rodada</label>
+      <select id="inp_round">
+        <option>1ª RODADA</option><option>OITAVAS</option><option>QUARTAS</option>
+        <option>SEMI</option><option>SEMIFINAL</option><option>FINAL</option><option>TT</option>
+      </select>
+      <label>Placar (opcional)</label><input type="text" id="inp_score" placeholder="ex: 6/3 6/2">
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn-confirm" onclick="saveNewMatch()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div id="confirmModal" style="display:none">
+  <div class="modal-overlay" onclick="if(event.target===this)closeConfirm()">
+    <div class="modal" style="max-width:320px;text-align:center">
+      <div class="modal-handle"></div>
+      <h3>🗑️ Excluir jogo?</h3>
+      <p id="confirmText" style="font-size:13px;color:#666;margin:12px 0 20px"></p>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeConfirm()">Cancelar</button>
+        <button class="btn-delete-confirm" onclick="confirmDelete()">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO EDIT MODAL -->
+<div id="heroModal" style="display:none">
+  <div class="modal-overlay" onclick="if(event.target===this)closeHeroModal()">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <h3>🏆 Editar Cabeçalho</h3>
+      <label>Tag / circuito (ex: CIRCUITO OFICIAL FPT)</label><input type="text" id="hm_tag" placeholder="CIRCUITO OFICIAL FPT">
+      <label>Título principal</label><input type="text" id="hm_title" placeholder="RR Tênis · Kidstour 2026">
+      <label>Subtítulo (datas e local)</label><input type="text" id="hm_sub" placeholder="17 a 19 de Abril · Academia RR Tênis">
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeHeroModal()">Cancelar</button>
+        <button class="btn-confirm" onclick="saveHeroModal()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEW DAY MODAL -->
+<div id="newDayModal" style="display:none">
+  <div class="modal-overlay" onclick="if(event.target===this)closeNewDayModal()">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <h3>📅 Adicionar Novo Dia</h3>
+      <label>Nome da aba (ex: 20 Abr — Final)</label><input type="text" id="nd_tab" placeholder="20 Abr — Final">
+      <label>Nome do torneio</label><input type="text" id="nd_tour" placeholder="Ex: Circuito Kidstour – RR Tênis">
+      <label>Árbitro e local</label><input type="text" id="nd_meta" placeholder="Ex: Árbitro: João · Academia XYZ">
+      <label>Fase / rótulo</label><input type="text" id="nd_pill" placeholder="Ex: Final">
+      <label>Data</label><input type="text" id="nd_date" placeholder="Ex: 20 Abr 2026">
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeNewDayModal()">Cancelar</button>
+        <button class="btn-confirm" onclick="saveNewDay()">Criar dia</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOUR SETTINGS MODAL -->
+<div id="tourModal" style="display:none">
+  <div class="modal-overlay" onclick="if(event.target===this)closeTourModal()">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <h3>⚙️ Configurações do Torneio</h3>
+      <label>Nome da aba (ex: 17 Abr — 1ª Rodada)</label><input type="text" id="tm_tab" placeholder="Ex: 17 Abr — 1ª Rodada">
+      <label>Nome do torneio</label><input type="text" id="tm_tour" placeholder="Ex: Circuito Kidstour – RR Tênis">
+      <label>Árbitro e local</label><input type="text" id="tm_meta" placeholder="Ex: Árbitro: João · Academia XYZ">
+      <label>Fase / rótulo</label><input type="text" id="tm_pill" placeholder="Ex: 1ª Rodada">
+      <label>Data</label><input type="text" id="tm_date" placeholder="Ex: 17 Abr 2026">
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeTourModal()">Cancelar</button>
+        <button class="btn-confirm" onclick="saveTourModal()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const ADMIN_PW = '0099';
+const API = '/api/data';
+
+let isAdmin = false;
+let currentDay = 0;
+let addingDay = 0;
+let pendingDelete = null;
+
+/* ── HERO CONFIG ── */
+let heroConfig = {
+  tag: 'CIRCUITO OFICIAL FPT',
+  title: 'RR Tênis · Kidstour 2026',
+  sub: '17 a 19 de Abril · Academia RR Tênis, São Paulo'
+};
+
+const CAT_STYLE = {
+  '10M':'background:#E8F5E9;color:#2E7D32','11M':'background:#FFF3E0;color:#E65100',
+  '8M':'background:#E3F2FD;color:#1565C0','10F':'background:#FCE4EC;color:#AD1457',
+  '11F':'background:#F3E5F5;color:#7B1FA2','12M':'background:#E8F5E9;color:#2E7D32',
+  '12F':'background:#FCE4EC;color:#AD1457','14M':'background:#E8EAF6;color:#3949AB',
+  '14F':'background:#FCE4EC;color:#AD1457','16M':'background:#E8EAF6;color:#283593'
+};
+const ROUND_STYLE = {
+  '1ª RODADA':'background:#E8F5E9;color:#2E7D32','1º RODADA':'background:#E8F5E9;color:#2E7D32',
+  'OITAVAS':'background:#E3F2FD;color:#1565C0','QUARTAS':'background:#EDE7F6;color:#6A1B9A',
+  'SEMI':'background:#FFF3E0;color:#E65100','SEMIFINAL':'background:#FFF3E0;color:#E65100',
+  'FINAL':'background:#FFEBEE;color:#B71C1C','TT':'background:#E0F2F1;color:#00695C'
+};
+
+/* ── DATA DEFAULT ── */
+let data = [
+  {
+    tour:'Circuito Kidstour – RR Tênis',meta:'Árbitro: José Carlos Rodrigues · Academia RR Tênis',
+    pill:'1ª Rodada',date:'17 Abr 2026',
+    matches:[
+      {time:'14:00',cat:'10M',round:'1ª RODADA',num:1,p1:'Davi Vieira',p2:'Francisco Marucio',score:'',court:''},
+      {time:'14:00',cat:'10M',round:'1ª RODADA',num:2,p1:'Caio Pesce',p2:'Thiago Cerchiaro',score:'',court:''},
+      {time:'15:00',cat:'10M',round:'1ª RODADA',num:3,p1:'Matheus H. Basanta',p2:'Guilherme Tacito',score:'',court:''},
+      {time:'15:00',cat:'10M',round:'1ª RODADA',num:4,p1:'Arthur Clemonini',p2:'Gabriel Ferreira',score:'',court:''},
+      {time:'16:00',cat:'10M',round:'1ª RODADA',num:5,p1:'Badam',p2:'Theo Caprini',score:'',court:''},
+      {time:'16:00',cat:'10M',round:'1ª RODADA',num:6,p1:'Rafael Guimarães',p2:'Henrique Bernardino',score:'',court:''},
+      {time:'16:00',cat:'10M',round:'1ª RODADA',num:7,p1:'Gabriel Teixeira',p2:'Thomas Nunes',score:'',court:''},
+      {time:'16:00',cat:'10M',round:'1ª RODADA',num:8,p1:'Jack Egan',p2:'Eduardo Queen',score:'',court:''},
+      {time:'17:00',cat:'11M',round:'1ª RODADA',num:1,p1:'Eduardo Cola',p2:'Lucca Alpiste',score:'',court:''},
+      {time:'17:00',cat:'11M',round:'1ª RODADA',num:2,p1:'Henrique Burgos',p2:'Samuel Stringueto',score:'',court:''},
+      {time:'17:00',cat:'11M',round:'1ª RODADA',num:3,p1:'Leonardo Nonato',p2:'Guilherme Panella',score:'',court:''},
+      {time:'17:00',cat:'11M',round:'1ª RODADA',num:4,p1:'João Pedro Cuzzi',p2:'Pietro Mello',score:'',court:''},
+      {time:'17:00',cat:'11M',round:'1ª RODADA',num:5,p1:'Lorenzo Bartolucci',p2:'Pedro Felicio',score:'',court:''},
+      {time:'17:00',cat:'11M',round:'1ª RODADA',num:6,p1:'Lucas Catunda',p2:'Caio Ponchio',score:'',court:''},
+      {time:'17:00',cat:'11M',round:'1ª RODADA',num:7,p1:'Pedro Palaia',p2:'Pedro Osorio',score:'',court:''},
+      {time:'17:00',cat:'11M',round:'1ª RODADA',num:8,p1:'Miguel Macedo',p2:'Henrique Ballastreire',score:'',court:''},
+      {time:'19:30',cat:'11M',round:'1ª RODADA',num:9,p1:'Felipe Pollis',p2:'Otavio Pupo',score:'',court:''}
+    ]
+  },
+  {
+    tour:'Circuito Kidstour – RR Tênis',meta:'Árbitro: José Carlos Rodrigues · RR Tênis',
+    pill:'Oitavas / Quartas',date:'18 Abr 2026',
+    matches:[
+      {time:'09:00',cat:'10M',round:'OITAVAS',num:9,p1:'Murilo Domingues',p2:'Venc. 1',score:'',court:''},
+      {time:'09:00',cat:'10M',round:'OITAVAS',num:10,p1:'Venc. 2',p2:'Gustavo Antoun',score:'',court:''},
+      {time:'09:00',cat:'10M',round:'OITAVAS',num:11,p1:'Guilherme Perucchetti',p2:'Venc. 3',score:'',court:''},
+      {time:'09:00',cat:'8M',round:'QUARTAS',num:1,p1:'Oliver Chu',p2:'Davi Stringueto',score:'',court:''},
+      {time:'10:00',cat:'10F',round:'TT',num:1,p1:'Paola Andrade',p2:'Manuela Guimarães',score:'',court:''},
+      {time:'10:00',cat:'10F',round:'TT',num:2,p1:'Rafaela Muller',p2:'Isabela Chevrier',score:'',court:''},
+      {time:'10:00',cat:'10M',round:'OITAVAS',num:12,p1:'Venc. 4',p2:'Marcos Marques',score:'',court:''},
+      {time:'10:00',cat:'8M',round:'QUARTAS',num:2,p1:'Pedro Bernardi',p2:'Miguel Satoru',score:'',court:''},
+      {time:'11:00',cat:'10M',round:'OITAVAS',num:13,p1:'Guilherme Jacon',p2:'Venc. 5',score:'',court:''},
+      {time:'11:00',cat:'10M',round:'OITAVAS',num:14,p1:'Venc. 6',p2:'Thomas Melo',score:'',court:''},
+      {time:'11:00',cat:'10M',round:'OITAVAS',num:15,p1:'Rafael Carvalho',p2:'Venc. 7',score:'',court:''},
+      {time:'11:00',cat:'8M',round:'QUARTAS',num:3,p1:'Felipe Vieira',p2:'Pedro Grigoletto',score:'',court:''},
+      {time:'12:30',cat:'11F',round:'TT',num:1,p1:'Paola Silva',p2:'Maitê Mello',score:'',court:''},
+      {time:'12:30',cat:'11F',round:'RODADA',num:2,p1:'Isabella Bronhara',p2:'Rafaela Baumgarten',score:'',court:''},
+      {time:'12:30',cat:'10M',round:'OITAVAS',num:16,p1:'Venc. 8',p2:'João Grigoleto',score:'',court:''},
+      {time:'12:30',cat:'11M',round:'OITAVAS',num:10,p1:'Gabriel Monteiro',p2:'Venc. 1',score:'',court:''},
+      {time:'13:30',cat:'10F',round:'TT',num:3,p1:'Paola Andrade',p2:'Rafaela Muller',score:'',court:''},
+      {time:'13:30',cat:'10F',round:'TT',num:4,p1:'Isabela Chevrier',p2:'Manuela Guimarães',score:'',court:''},
+      {time:'13:30',cat:'11M',round:'OITAVAS',num:11,p1:'Venc. 2',p2:'Lucas Chevrier',score:'',court:''},
+      {time:'13:30',cat:'11M',round:'OITAVAS',num:12,p1:'Lucas Felicio',p2:'Venc. 3',score:'',court:''},
+      {time:'14:30',cat:'11M',round:'OITAVAS',num:13,p1:'Venc. 4',p2:'Joaquim Pires',score:'',court:''},
+      {time:'14:30',cat:'11M',round:'OITAVAS',num:14,p1:'Venc. 5',p2:'Venc. 6',score:'',court:''},
+      {time:'14:30',cat:'11M',round:'OITAVAS',num:15,p1:'Venc. 7',p2:'Arthur Macedo',score:'',court:''},
+      {time:'16:00',cat:'11F',round:'TT',num:3,p1:'Isabella Bronhara',p2:'Paola Silva',score:'',court:''},
+      {time:'16:00',cat:'11F',round:'TT',num:4,p1:'Maitê Mello',p2:'Rafaela Baumgarten',score:'',court:''},
+      {time:'16:00',cat:'11M',round:'OITAVAS',num:16,p1:'Francisco Albani',p2:'Venc. 8',score:'',court:''},
+      {time:'16:00',cat:'11M',round:'OITAVAS',num:17,p1:'Venc. 9',p2:'Benicio Pacheco',score:'',court:''},
+      {time:'17:00',cat:'10M',round:'QUARTAS',num:17,p1:'Venc. 9',p2:'Venc. 10',score:'',court:''},
+      {time:'17:00',cat:'10M',round:'QUARTAS',num:18,p1:'Venc. 11',p2:'Venc. 12',score:'',court:''},
+      {time:'17:00',cat:'10M',round:'QUARTAS',num:19,p1:'Venc. 13',p2:'Venc. 14',score:'',court:''},
+      {time:'17:00',cat:'10M',round:'QUARTAS',num:20,p1:'Venc. 15',p2:'Venc. 16',score:'',court:''},
+      {time:'18:30',cat:'11M',round:'QUARTAS',num:18,p1:'Venc. 10',p2:'Venc. 11',score:'',court:''},
+      {time:'18:30',cat:'11M',round:'QUARTAS',num:19,p1:'Venc. 12',p2:'Venc. 13',score:'',court:''},
+      {time:'18:30',cat:'11M',round:'QUARTAS',num:20,p1:'Venc. 14',p2:'Venc. 15',score:'',court:''},
+      {time:'19:30',cat:'11M',round:'QUARTAS',num:21,p1:'Venc. 16',p2:'Venc. 17',score:'',court:''}
+    ]
+  },
+  {
+    tour:'1º Torneio Aberto Mambo de Tênis',meta:'Árbitro: José Carlos Rodrigues · SliceTennis',
+    pill:'Semi / Final',date:'19 Abr 2026',
+    matches:[
+      {time:'09:00',cat:'10M',round:'SEMI',num:21,p1:'Venc. 17',p2:'Venc. 18',score:'',court:''},
+      {time:'09:00',cat:'10M',round:'SEMI',num:22,p1:'Venc. 19',p2:'Venc. 20',score:'',court:''},
+      {time:'09:00',cat:'8M',round:'SEMI',num:4,p1:'Pedro Guimarães',p2:'Venc. 1',score:'',court:''},
+      {time:'12:00',cat:'10M',round:'FINAL',num:23,p1:'Venc. 21',p2:'Venc. 22',score:'',court:''},
+      {time:'12:00',cat:'8M',round:'FINAL',num:6,p1:'Venc. 4',p2:'Venc. 5',score:'',court:''},
+      {time:'13:00',cat:'11M',round:'FINAL',num:24,p1:'Venc. 22',p2:'Venc. 23',score:'',court:''}
+    ]
+  },
+  {
+    tour:'Copa YCP Infantojuvenil – IJ600',meta:'Árbitro: Samanta Zimbaro · Yacht Club Paulista',
+    pill:'Semifinal',date:'09 Fev 2026',
+    matches:[
+      {time:'14:00',cat:'14M',round:'SEMIFINAL',num:'J23',p1:'Lucas Baroni',p2:'Otto Diederichsen',score:'',court:''},
+      {time:'14:00',cat:'12F',round:'FINAL',num:'J9',p1:'Maria Barreto',p2:'Sophia Kinjo',score:'7/5 6/1',court:''}
+    ]
+  },
+  {
+    tour:'Copa YCP Infantojuvenil – IJ600',meta:'Árbitro: Samanta Zimbaro · Yacht Club Paulista',
+    pill:'Finais',date:'10 Fev 2026',
+    matches:[
+      {time:'15:00',cat:'14M',round:'SEMIFINAL',num:'J24',p1:'Eduardo Miguel',p2:'Rodrigo Diez',score:'4/6 6/2 10/2',court:'3'},
+      {time:'15:00',cat:'12M',round:'FINAL',num:'J23',p1:'Arthur Souza',p2:'David Alem',score:'2/6 6/4 10/5',court:'4'},
+      {time:'15:00',cat:'14F',round:'FINAL',num:'J6',p1:'Beatriz Dietrich',p2:'Georgia Kepler',score:'7/5 6/2',court:'6'},
+      {time:'17:00',cat:'14M',round:'FINAL',num:'J25',p1:'Otto Diederichsen',p2:'Rodrigo Diez',score:'6/1 6/1',court:'3'},
+      {time:'17:00',cat:'16M',round:'FINAL',num:'J9',p1:'Miguel C. Castro',p2:'Rafael Azevedo',score:'4/6 6/4 10/2',court:'4'}
+    ]
+  }
+];
+
+/* ── HELPERS ── */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function catStyle(c){return CAT_STYLE[c]||'background:#f0f0f0;color:#555'}
+function roundStyle(r){return ROUND_STYLE[r]||'background:#E8F5E9;color:#2E7D32'}
+function isFinal(r){return r==='FINAL'}
+function getTimeBlocks(matches){
+  const b={};
+  matches.forEach((m,i)=>{if(!b[m.time])b[m.time]=[];b[m.time].push({...m,idx:i})});
+  return b;
+}
+
+/* ── SYNC STATUS ── */
+function showSync(msg,type){
+  const el=document.getElementById('syncStatus');
+  el.textContent=msg; el.className='sync-bar sync-'+type; el.style.display='flex';
+  if(type==='ok') setTimeout(()=>{el.style.display='none'},3000);
+}
+
+/* ── PERSIST via Netlify Function ── */
+async function persist(){
+  const payload = {data, heroConfig};
+  const json=JSON.stringify(payload);
+  localStorage.setItem('tennisData',json);
+  try{
+    showSync('Salvando para todos…','loading');
+    const r=await fetch(API,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','x-admin-key':ADMIN_PW},
+      body:json
+    });
+    if(r.ok) showSync('✅ Salvo — todos verão agora','ok');
+    else showSync('⚠️ Erro ao salvar na nuvem ('+r.status+')','err');
+  }catch(e){
+    showSync('⚠️ Sem conexão — salvo só localmente','err');
+  }
+}
+
+/* ── LOAD via Netlify Function ── */
+async function loadData(){
+  function applyPayload(p){
+    if(!p) return false;
+    // support both old format (plain array) and new format ({data, heroConfig})
+    if(Array.isArray(p)){data=p;return true;}
+    if(p.data && Array.isArray(p.data)){
+      data=p.data;
+      if(p.heroConfig) heroConfig=p.heroConfig;
+      return true;
+    }
+    return false;
+  }
+  try{
+    const r=await fetch(API+'?t='+Date.now());
+    if(r.ok){
+      const txt=await r.text();
+      if(txt && txt!=='null'){
+        const p=JSON.parse(txt);
+        if(applyPayload(p)) return;
+      }
+    }
+  }catch(e){}
+  const saved=localStorage.getItem('tennisData');
+  if(saved){try{applyPayload(JSON.parse(saved));}catch(e){}}
+}
+
+// Polling para quem está visualizando
+setInterval(async()=>{
+  if(isAdmin)return;
+  try{
+    const r=await fetch(API+'?t='+Date.now());
+    if(r.ok){
+      const txt=await r.text();
+      if(txt&&txt!=='null'){
+        const p=JSON.parse(txt);
+        if(Array.isArray(p)){data=p;}
+        else if(p&&p.data&&Array.isArray(p.data)){data=p.data;if(p.heroConfig)heroConfig=p.heroConfig;}
+        renderAll();
+      }
+    }
+  }catch(e){}
+},30000);
+
+/* ── RENDER ── */
+function renderScore(m,di,mi){
+  if(isAdmin){
+    if(m.score) return`<span class="score-display" onclick="startEdit(${di},${mi})">${esc(m.score)}</span>`;
+    return`<span class="score-pending" onclick="startEdit(${di},${mi})">+ placar</span>`;
+  }
+  if(m.score) return`<span class="score-display" style="cursor:default">${esc(m.score)}</span>`;
+  return`<span class="score-pending" style="cursor:default;pointer-events:none">a definir</span>`;
+}
+
+function renderDay(di){
+  const d=data[di];
+  const blocks=getTimeBlocks(d.matches);
+  const editTourBtn=isAdmin?`<button class="tour-edit-btn" onclick="openTourModal(${di})">✏️ Editar</button>`:'';
+  let html=`<div class="tour-header">
+    <div class="tour-header-left">
+      <div class="tour-icon">🎾</div>
+      <div><div class="tour-name">${esc(d.tour)}</div><div class="tour-meta">${esc(d.meta)}</div></div>
+    </div>
+    <div class="tour-pills">
+      <span class="pill pill-green">${esc(d.pill)}</span>
+      <span class="pill pill-gold">${esc(d.date)}</span>
+      ${editTourBtn}
+    </div>
+  </div>`;
+
+  if(!Object.keys(blocks).length) html+=`<div class="empty-day">Nenhum jogo cadastrado neste dia.</div>`;
+
+  Object.keys(blocks).sort().forEach(time=>{
+    html+=`<div class="time-block"><div class="time-row"><div class="time-dot"></div><span class="time-txt">⏰ ${time}</span><div class="time-line"></div></div>`;
+    blocks[time].forEach(m=>{
+      const fin=isFinal(m.round)?' final-match':'';
+      const courtLabel=m.court?`· Q${esc(m.court)}`:'';
+      const adminBtns=isAdmin
+        ?`<button class="edit-pencil" onclick="openInlineEdit(${di},${m.idx})" title="Editar">✏️</button>
+           <button class="del-btn" onclick="askDelete(${di},${m.idx})" title="Excluir">✕</button>`
+        :'<span></span>';
+      html+=`<div class="match${fin}" id="match-${di}-${m.idx}">
+        <div class="meta">
+          <span class="rbadge" style="${roundStyle(m.round)}">${esc(m.round)}</span>
+          <span class="cbadge" style="${catStyle(m.cat)}">${esc(m.cat)}</span>
+          ${isAdmin?`<button class="edit-pencil" onclick="openInlineEdit(${di},${m.idx})" title="Editar">✏️</button>`:''}
+        </div>
+        <div class="player-col pleft">
+          <div class="pname">${esc(m.p1)}</div>
+          <div class="pnum">J${esc(m.num)} ${courtLabel}</div>
+        </div>
+        <div class="vs"><div class="vs-circle">VS</div></div>
+        <div class="player-col pright">
+          <div class="pname">${esc(m.p2)}</div>
+        </div>
+        <div class="score-area" id="score-${di}-${m.idx}">${renderScore(m,di,m.idx)}</div>
+        ${isAdmin?`<button class="del-btn" onclick="askDelete(${di},${m.idx})" title="Excluir">✕</button>`:'<span></span>'}
+      </div>
+      <div id="inline-edit-${di}-${m.idx}" style="display:none"></div>`;
+    });
+    html+='</div>';
+  });
+
+  if(isAdmin) html+=`<button class="add-match-btn" onclick="openAddModal(${di})">+ Adicionar jogo</button>`;
+  document.getElementById('day'+di).innerHTML=html;
+}
+
+/* ── RENDER TABS (dynamic) ── */
+function renderTabs(){
+  const container = document.getElementById('dayTabsContainer');
+  const contentsEl = document.getElementById('dayContents');
+
+  // Build tabs
+  let tabsHtml = '';
+  data.forEach((d,i)=>{
+    const label = d.tabLabel || (d.date+' — '+d.pill);
+    tabsHtml += `<div class="day-tab${i===currentDay?' active':''}" onclick="showDay(${i},this)">${esc(label)}</div>`;
+  });
+  if(isAdmin){
+    tabsHtml += `<div class="day-tab day-tab-add" onclick="openNewDayModal()" title="Adicionar novo dia">＋ Novo dia</div>`;
+  }
+  container.innerHTML = tabsHtml;
+
+  // Build day content divs
+  let contentsHtml = '';
+  data.forEach((_,i)=>{
+    contentsHtml += `<div id="day${i}" class="day-content${i===currentDay?' active':''}"></div>`;
+  });
+  contentsEl.innerHTML = contentsHtml;
+}
+
+/* ── RENDER HERO ── */
+function renderHero(){
+  document.getElementById('heroTag').textContent = heroConfig.tag||'';
+  document.getElementById('heroTitle').textContent = heroConfig.title||'';
+  document.getElementById('heroSub').textContent = heroConfig.sub||'';
+  document.getElementById('heroEditBtn').style.display = isAdmin ? 'inline-block' : 'none';
+}
+
+function renderAll(){
+  renderHero();
+  renderTabs();
+  for(let i=0;i<data.length;i++) renderDay(i);
+  updateStats();
+}
+
+function updateStats(){
+  let total=0,done=0;
+  const cats=new Set();
+  data.forEach(d=>d.matches.forEach(m=>{total++;if(m.score)done++;if(m.cat)cats.add(m.cat);}));
+  document.getElementById('statGames').textContent=total;
+  document.getElementById('statDone').textContent=done;
+  document.getElementById('statCats').textContent=cats.size||'—';
+  document.getElementById('statDays').textContent=data.length;
+}
+
+/* ── SCORE EDIT ── */
+function startEdit(di,mi){
+  const sa=document.getElementById('score-'+di+'-'+mi);
+  const cur=data[di].matches[mi].score||'';
+  sa.innerHTML=`<div class="score-input-wrap">
+    <input class="score-input" id="sinput" type="text" value="${esc(cur)}" placeholder="6/3 6/2" autofocus>
+    <button class="score-save" onclick="saveScore(${di},${mi})">OK</button>
+    <button class="score-cancel" onclick="cancelEdit(${di},${mi})">✕</button>
+  </div>`;
+  setTimeout(()=>{const i=document.getElementById('sinput');if(i){i.focus();i.select();}},50);
+}
+function saveScore(di,mi){
+  const i=document.getElementById('sinput');if(!i)return;
+  data[di].matches[mi].score=i.value.trim();
+  renderDay(di);updateStats();persist();
+}
+function cancelEdit(di,mi){
+  document.getElementById('score-'+di+'-'+mi).innerHTML=renderScore(data[di].matches[mi],di,mi);
+}
+
+/* ── INLINE EDIT ── */
+function openInlineEdit(di,mi){
+  const m=data[di].matches[mi];
+  const c=document.getElementById('inline-edit-'+di+'-'+mi);
+  const catOpts=['10M','11M','8M','10F','11F','12M','12F','14M','14F','16M']
+    .map(v=>`<option${v===m.cat?' selected':''}>${v}</option>`).join('');
+  const rndOpts=['1ª RODADA','OITAVAS','QUARTAS','SEMI','SEMIFINAL','FINAL','TT']
+    .map(v=>`<option${v===m.round?' selected':''}>${v}</option>`).join('');
+  c.innerHTML=`<div class="inline-edit-row">
+    <div class="full"><label>Jogador A</label><input id="ie_p1_${di}_${mi}" type="text" value="${esc(m.p1)}"></div>
+    <div class="full"><label>Jogador B</label><input id="ie_p2_${di}_${mi}" type="text" value="${esc(m.p2)}"></div>
+    <div><label>Horário</label><input id="ie_time_${di}_${mi}" type="time" value="${esc(m.time)}"></div>
+    <div><label>Quadra</label><input id="ie_court_${di}_${mi}" type="text" value="${esc(m.court||'')}"></div>
+    <div><label>Categoria</label><select id="ie_cat_${di}_${mi}">${catOpts}</select></div>
+    <div><label>Rodada</label><select id="ie_round_${di}_${mi}">${rndOpts}</select></div>
+    <div class="full"><label>Placar</label><input id="ie_score_${di}_${mi}" type="text" value="${esc(m.score||'')}"></div>
+    <div class="full inline-actions">
+      <button class="btn-cancel-inline" onclick="closeInlineEdit(${di},${mi})">Cancelar</button>
+      <button class="btn-save-inline" onclick="saveInlineEdit(${di},${mi})">Salvar alterações</button>
+    </div>
+  </div>`;
+  c.style.display='block';
+  c.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function closeInlineEdit(di,mi){
+  const c=document.getElementById('inline-edit-'+di+'-'+mi);
+  if(c){c.style.display='none';c.innerHTML='';}
+}
+function saveInlineEdit(di,mi){
+  const g=id=>document.getElementById(id);
+  const m=data[di].matches[mi];
+  m.p1=g(`ie_p1_${di}_${mi}`).value.trim()||m.p1;
+  m.p2=g(`ie_p2_${di}_${mi}`).value.trim()||m.p2;
+  m.time=g(`ie_time_${di}_${mi}`).value||m.time;
+  m.court=g(`ie_court_${di}_${mi}`).value.trim();
+  m.cat=g(`ie_cat_${di}_${mi}`).value;
+  m.round=g(`ie_round_${di}_${mi}`).value;
+  m.score=g(`ie_score_${di}_${mi}`).value.trim();
+  renderDay(di);updateStats();persist();
+}
+
+/* ── DELETE ── */
+function askDelete(di,mi){
+  pendingDelete={di,mi};
+  const m=data[di].matches[mi];
+  document.getElementById('confirmText').textContent=
+    `Excluir o jogo ${m.num}: ${m.p1} vs ${m.p2}? Esta ação não pode ser desfeita.`;
+  document.getElementById('confirmModal').style.display='block';
+}
+function closeConfirm(){document.getElementById('confirmModal').style.display='none';pendingDelete=null;}
+function confirmDelete(){
+  if(!pendingDelete)return;
+  const{di,mi}=pendingDelete;
+  data[di].matches.splice(mi,1);
+  closeConfirm();renderDay(di);updateStats();persist();
+}
+
+/* ── ADD ── */
+function openAddModal(di){addingDay=di;document.getElementById('addModal').style.display='block';}
+function closeModal(){document.getElementById('addModal').style.display='none';}
+function saveNewMatch(){
+  const p1=document.getElementById('inp_p1').value.trim();
+  const p2=document.getElementById('inp_p2').value.trim();
+  if(!p1||!p2){alert('Preencha os dois jogadores');return;}
+  data[addingDay].matches.push({
+    time:document.getElementById('inp_time').value,
+    cat:document.getElementById('inp_cat').value,
+    round:document.getElementById('inp_round').value,
+    num:data[addingDay].matches.length+1,
+    p1,p2,
+    court:document.getElementById('inp_court').value.trim(),
+    score:document.getElementById('inp_score').value.trim()
+  });
+  closeModal();renderDay(addingDay);updateStats();persist();
+}
+
+/* ── AUTH ── */
+function setMode(mode){
+  if(mode==='edit'){
+    document.getElementById('mainContent').style.display='none';
+    document.getElementById('lockScreen').style.display='block';
+    document.getElementById('pwInput').value='';
+    document.getElementById('lockError').style.display='none';
+  } else {
+    isAdmin=false;
+    document.getElementById('btnView').classList.add('active');
+    document.getElementById('btnEdit').classList.remove('active');
+    document.getElementById('editHint').style.display='none';
+    document.getElementById('publicBar').style.display='block';
+    renderAll();
+  }
+}
+function checkPw(){
+  if(document.getElementById('pwInput').value===ADMIN_PW){
+    isAdmin=true;
+    document.getElementById('lockScreen').style.display='none';
+    document.getElementById('mainContent').style.display='flex';
+    document.getElementById('mainContent').style.flexDirection='column';
+    document.getElementById('btnEdit').classList.add('active');
+    document.getElementById('btnView').classList.remove('active');
+    document.getElementById('editHint').style.display='block';
+    document.getElementById('publicBar').style.display='none';
+    renderAll();
+  } else {
+    document.getElementById('lockError').style.display='block';
+    document.getElementById('pwInput').value='';
+  }
+}
+
+/* ── TABS ── */
+function showDay(idx,el){
+  currentDay=idx;
+  document.querySelectorAll('.day-content').forEach(d=>d.classList.remove('active'));
+  const dc=document.getElementById('day'+idx);
+  if(dc) dc.classList.add('active');
+  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+
+/* ── SHARE ── */
+function copyLink(){
+  const url=location.href;
+  document.getElementById('shareUrl').textContent=url;
+  navigator.clipboard.writeText(url).then(()=>{
+    const b=document.querySelector('.copy-btn');
+    b.textContent='Copiado!';setTimeout(()=>b.textContent='Copiar link',2000);
+  });
+}
+
+/* ── HERO MODAL ── */
+function openHeroModal(){
+  document.getElementById('hm_tag').value=heroConfig.tag||'';
+  document.getElementById('hm_title').value=heroConfig.title||'';
+  document.getElementById('hm_sub').value=heroConfig.sub||'';
+  document.getElementById('heroModal').style.display='block';
+}
+function closeHeroModal(){document.getElementById('heroModal').style.display='none';}
+function saveHeroModal(){
+  heroConfig.tag=document.getElementById('hm_tag').value.trim()||heroConfig.tag;
+  heroConfig.title=document.getElementById('hm_title').value.trim()||heroConfig.title;
+  heroConfig.sub=document.getElementById('hm_sub').value.trim();
+  closeHeroModal();
+  renderHero();
+  persist();
+}
+
+/* ── NEW DAY MODAL ── */
+function openNewDayModal(){document.getElementById('newDayModal').style.display='block';}
+function closeNewDayModal(){document.getElementById('newDayModal').style.display='none';}
+function saveNewDay(){
+  const tab=document.getElementById('nd_tab').value.trim();
+  const tour=document.getElementById('nd_tour').value.trim();
+  const meta=document.getElementById('nd_meta').value.trim();
+  const pill=document.getElementById('nd_pill').value.trim();
+  const date=document.getElementById('nd_date').value.trim();
+  if(!tab){alert('Digite o nome da aba');return;}
+  data.push({
+    tabLabel:tab,
+    tour:tour||tab,
+    meta:meta||'',
+    pill:pill||'',
+    date:date||'',
+    matches:[]
+  });
+  currentDay=data.length-1;
+  closeNewDayModal();
+  // clear inputs
+  ['nd_tab','nd_tour','nd_meta','nd_pill','nd_date'].forEach(id=>document.getElementById(id).value='');
+  renderAll();
+  persist();
+}
+
+/* ── TOUR MODAL ── */
+let editingTourDay=0;
+function openTourModal(di){
+  editingTourDay=di;
+  const d=data[di];
+  const defaultLabel=d.date&&d.pill?(d.date+' — '+d.pill):'';
+  document.getElementById('tm_tab').value=d.tabLabel||defaultLabel;
+  document.getElementById('tm_tour').value=d.tour||'';
+  document.getElementById('tm_meta').value=d.meta||'';
+  document.getElementById('tm_pill').value=d.pill||'';
+  document.getElementById('tm_date').value=d.date||'';
+  document.getElementById('tourModal').style.display='block';
+}
+function closeTourModal(){document.getElementById('tourModal').style.display='none';}
+function saveTourModal(){
+  const d=data[editingTourDay];
+  const tab=document.getElementById('tm_tab').value.trim();
+  const t=document.getElementById('tm_tour').value.trim();
+  const m=document.getElementById('tm_meta').value.trim();
+  const p=document.getElementById('tm_pill').value.trim();
+  const dt=document.getElementById('tm_date').value.trim();
+  if(tab) d.tabLabel=tab;
+  if(t) d.tour=t;
+  d.meta=m;
+  if(p) d.pill=p;
+  if(dt) d.date=dt;
+  closeTourModal();
+  renderAll();
+  persist();
+}
+
+/* ── INIT ── */
+document.getElementById('shareUrl').textContent=location.href;
+loadData().then(()=>renderAll());
+</script>
+</body>
+</html>
